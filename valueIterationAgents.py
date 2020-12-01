@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -18,7 +18,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -59,33 +59,31 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.values = util.Counter() # A Counter is a dict with default 0
         self.runValueIteration()
 
+
     def runValueIteration(self):
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
         # Write value iteration code here
         for i in range(self.iterations):
             v = self.values.copy()
+
             for state in self.mdp.getStates():
 
                 values = []
                 posibleActions = self.mdp.getPossibleActions(state)
 
                 if not self.mdp.isTerminal(state):
-
-                    for action in posibleActions:
-                        
-                        transitions = self.mdp.getTransitionStatesAndProbs(state, action)
+                    for act in posibleActions:
                         value = 0
-                        for transition in transitions:
-                            value += transition[1] * (self.mdp.getReward(state, action, transition[0]) + self.discount * v[transition[0]])
+                        transitions = self.mdp.getTransitionStatesAndProbs(state, act)
+                        for iteration in transitions:
+                            value = value + (self.mdp.getReward(state, act, iteration[0]) +
+                                      self.discount * v[iteration[0]]) * iteration[1]
                         values.append(value)
                     self.values[state] = max(values)
 
-                else:
-
+                if not values: #Si esta vacio
                     self.values[state] = 0
-
-
 
     def getValue(self, state):
         """
@@ -103,7 +101,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         value = 0
         transitions = self.mdp.getTransitionStatesAndProbs(state, action)
         for transition in transitions:
-            value += transition[1] * (self.mdp.getReward(state, action, transition[0]) + self.discount * self.values[transition[0]])
+            value += transition[1] * ( (self.values[transition[0]] * self.discount) + self.mdp.getReward(state, action, transition[0]))
         return value
 
     def computeActionFromValues(self, state):
@@ -119,7 +117,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         if self.mdp.isTerminal(state):
             return None
         else:
-            bestval = -99999999999
+            bestval = float("-inf")
             bestaction = 0
             all_actions = self.mdp.getPossibleActions(state)
             for action in all_actions:
