@@ -63,25 +63,28 @@ class ValueIterationAgent(ValueEstimationAgent):
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
         # Write value iteration code here
-        vcurr = util.Counter()
         for i in range(self.iterations):
-            vcurr = self.values.copy()
+            v = self.values.copy()
             for state in self.mdp.getStates():
-                all_actions = self.mdp.getPossibleActions(state)
-                transitions = []
-                value_list = []
-                if self.mdp.isTerminal(state):
-                    self.values[state] = 0
-                else:
-                    for action in all_actions:
+
+                values = []
+                posibleActions = self.mdp.getPossibleActions(state)
+
+                if not self.mdp.isTerminal(state):
+
+                    for action in posibleActions:
+                        
                         transitions = self.mdp.getTransitionStatesAndProbs(state, action)
                         value = 0
                         for transition in transitions:
-                            value += transition[1] * (
-                                        self.mdp.getReward(state, action, transition[0]) + self.discount * vcurr[
-                                    transition[0]])
-                        value_list.append(value)
-                    self.values[state] = max(value_list)
+                            value += transition[1] * (self.mdp.getReward(state, action, transition[0]) + self.discount * v[transition[0]])
+                        values.append(value)
+                    self.values[state] = max(values)
+
+                else:
+
+                    self.values[state] = 0
+
 
 
     def getValue(self, state):
@@ -100,8 +103,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         value = 0
         transitions = self.mdp.getTransitionStatesAndProbs(state, action)
         for transition in transitions:
-            value += transition[1] * (
-                        self.mdp.getReward(state, action, transition[0]) + self.discount * self.values[transition[0]])
+            value += transition[1] * (self.mdp.getReward(state, action, transition[0]) + self.discount * self.values[transition[0]])
         return value
 
     def computeActionFromValues(self, state):
