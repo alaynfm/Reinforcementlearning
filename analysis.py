@@ -21,7 +21,7 @@
 
 def question2():
     answerDiscount = 0.9
-    answerNoise = None
+    answerNoise = 0.0
     return answerDiscount, answerNoise
 
 if __name__ == '__main__':

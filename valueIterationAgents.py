@@ -114,7 +114,6 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
-<<<<<<< Updated upstream
         if self.mdp.isTerminal(state):
             return None
         else:
@@ -132,8 +131,6 @@ class ValueIterationAgent(ValueEstimationAgent):
                     bestaction = action
                     bestval = value
             return bestaction
-=======
->>>>>>> Stashed changes
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
