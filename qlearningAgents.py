@@ -78,16 +78,22 @@ class QLearningAgent(ReinforcementAgent):
           you should return None.
         """
         "*** YOUR CODE HERE ***"
-        maxAction = None
-        maxValue = 0
+        if len(self.getLegalActions(state))==0:
+            return None
+
+        maxValue=None
+        bestActions=[]
+
         for action in self.getLegalActions(state):
             actValue = self.getQValue(state, action)
-            if maxAction == None:
-                maxAction = action
-            if actValue > maxValue:
+
+            if maxValue is None or actValue > maxValue:
+                bestActions = [action]
                 maxValue = actValue
-                maxAction = action
-        return maxAction
+            elif actValue == maxValue:
+                bestActions.append(action)
+
+        return random.choice(bestActions)
 
     def getAction(self, state):
         """
