@@ -101,7 +101,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         value = 0
         transitions = self.mdp.getTransitionStatesAndProbs(state, action)
         for transition in transitions:
-            value += transition[1] * ( (self.values[transition[0]] * self.discount) + self.mdp.getReward(state, action, transition[0]))
+            value = value + transition[1] * ( (self.values[transition[0]] * self.discount) + self.mdp.getReward(state, action, transition[0]))
         return value
 
     def computeActionFromValues(self, state):
@@ -117,20 +117,19 @@ class ValueIterationAgent(ValueEstimationAgent):
         if self.mdp.isTerminal(state):
             return None
         else:
-            bestval = float("-inf")
-            bestaction = 0
+            best = float("-inf")
+            bestAction = 0
             all_actions = self.mdp.getPossibleActions(state)
             for action in all_actions:
                 transitions = self.mdp.getTransitionStatesAndProbs(state, action)
                 value = 0
                 for transition in transitions:
-                    value += transition[1] * (
-                                self.mdp.getReward(state, action, transition[0]) + self.discount * self.values[
-                            transition[0]])
-                if value > bestval:
-                    bestaction = action
-                    bestval = value
-            return bestaction
+                    value = value + transition[1] * (
+                                self.mdp.getReward(state, action, transition[0]) + self.discount * self.values[transition[0]])
+                if value > best:
+                    bestAction = action
+                    best = value
+            return bestAction
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
